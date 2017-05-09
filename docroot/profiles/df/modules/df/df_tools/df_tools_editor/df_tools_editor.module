@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Contains df_tools_editor.module.
+ */
+
+/**
+ * Implements hook_ckeditor_plugin_info_alter().
+ */
+function df_tools_editor_editor_js_settings_alter(array &$settings) {
+  foreach ($settings['editor']['formats'] as &$format) {
+    // Set the editor skin to Moono-Lisa.
+    $format['editorSettings']['skin'] = 'moono-lisa,' . base_path() . drupal_get_path('module', 'df_tools_editor') . '/skins/moono-lisa/';
+
+    // Swap in our custom JS by adding a pseudo plugin. We do this as we do not
+    // provide a button, which is what traditional CKEditor plugins would do.
+    $format['editorSettings']['drupalExternalPlugins']['df_tools_editor'] = base_path() . drupal_get_path('module', 'df_tools_editor') . '/js/df_tools_editor.js';
+    $format['editorSettings']['extraPlugins'] .= ',df_tools_editor';
+  }
+}

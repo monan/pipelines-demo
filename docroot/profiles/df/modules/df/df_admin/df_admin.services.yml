@@ -1,0 +1,5 @@
+services:
+  df_admin.subscriber:
+    class: Drupal\df_admin\EventSubscriber\MenuRouterRebuildSubscriber
+    tags:
+      - { name: event_subscriber }

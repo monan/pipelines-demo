@@ -1,0 +1,7 @@
+uuid: cab53300-0106-41d2-b30f-3fca41d322c4
+langcode: en
+status: true
+dependencies: {  }
+id: office_size
+label: 'Office size'
+elementType: radios

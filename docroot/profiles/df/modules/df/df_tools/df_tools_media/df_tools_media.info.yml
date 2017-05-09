@@ -1,0 +1,13 @@
+name: DF Tools Media
+type: module
+description: Extends the Lightning Media module to provide media handling capabilities.
+core: 8.x
+package: Demo Framework Tools
+dependencies:
+  - config_rewrite
+  - lightning_media
+  - lightning_media_document
+  - lightning_media_image
+  - lightning_media_instagram
+  - lightning_media_twitter
+  - lightning_media_video

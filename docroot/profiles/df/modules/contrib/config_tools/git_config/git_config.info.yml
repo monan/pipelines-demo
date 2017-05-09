@@ -1,0 +1,10 @@
+name: Git Configuration
+type: module
+description: 'Stores configuration in a git repository.'
+package: Configuration
+version: VERSION
+core: 8.x
+configure: git_config.settings
+dependencies:
+  - config_files
+

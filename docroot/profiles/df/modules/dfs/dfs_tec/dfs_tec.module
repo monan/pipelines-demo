@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Contains dfs_tec.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_scenario_import().
+ */
+function dfs_tec_scenario_import() {
+  $migrations = [];
+  $migrations['dfs_tec'] = array(
+    'import_dfs_tec_tags',
+    'import_dfs_tec_article',
+    'import_dfs_tec_basic',
+    'import_dfs_tec_employee',
+    'import_dfs_tec_image',
+    'import_dfs_tec_page',
+    'import_dfs_tec_service',
+    'import_dfs_tec_hero',
+    'import_dfs_tec_slideshow',
+  );
+  return (array) $migrations;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function dfs_tec_module_implements_alter(&$implementations, $hook) {
+  // Ensure migrations get set in the right order.
+  if ($hook == 'migration_plugins_alter') {
+    $preferred_order = [
+      'import',
+      'df_tools_user',
+      'df_tools_blocks',
+      'df_tools_slideshow',
+      'dfs_tec',
+    ];
+    foreach ($preferred_order as $module) {
+      if (isset($implementations[$module])) {
+        unset($implementations[$module]);
+        $implementations[$module] = $module;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function dfs_tec_migration_plugins_alter(&$definitions) {
+  // Update source references in scenario migrations.
+  $import = dfs_tec_scenario_import();
+  foreach ($import['dfs_tec'] as $id) {
+    $definitions[$id]['source']['path'] = str_replace('..', dirname(__FILE__), $definitions[$id]['source']['path']);
+  }
+}

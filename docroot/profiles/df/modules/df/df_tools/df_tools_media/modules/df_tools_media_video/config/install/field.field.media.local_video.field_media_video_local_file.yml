@@ -1,0 +1,27 @@
+uuid: 71ffe265-05f2-4561-b81d-39c41ed4155b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_video_local_file
+    - media_entity.bundle.local_video
+  module:
+    - file
+id: media.local_video.field_media_video_local_file
+field_name: field_media_video_local_file
+entity_type: media
+bundle: local_video
+label: 'Video File'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'mp4 webm ogg ogv'
+  max_filesize: ''
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

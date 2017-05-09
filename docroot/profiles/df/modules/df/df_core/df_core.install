@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Set up the Demo Framework themes.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function df_core_install() {
+  // Enable the Zurb Foundation theme.
+  // Zurb Foundation provides foundation_* layouts which are used throughout DF.
+  // This makes the theme a hard requirement, however, modules are unable to
+  // specify a theme as a dependency. All DF modules rely on df_core so enabling
+  // it here guarantees it is available.
+  \Drupal::service('theme_installer')->install(array('zurb_foundation'), TRUE);
+}

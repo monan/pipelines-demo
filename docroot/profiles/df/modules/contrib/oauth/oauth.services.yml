@@ -1,0 +1,10 @@
+services:
+  authentication.oauth:
+    class: 'Drupal\oauth\Authentication\Provider\OAuthDrupalProvider'
+    arguments: ['@database', '@logger.channel.oauth']
+    tags:
+      - { name: 'authentication_provider', provider_id: oauth, priority: 100 }
+
+  logger.channel.oauth:
+    parent: 'logger.channel_base'
+    arguments: ['oauth']

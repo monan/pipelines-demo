@@ -1,0 +1,24 @@
+required:
+  - core.entity_form_display.node.agent_location.default
+  - core.entity_view_display.node.agent_location.default
+  - core.entity_view_display.node.agent_location.teaser
+  - field.field.node.agent_location.body
+  - field.field.node.agent_location.field_address
+  - field.field.node.agent_location.field_areas_of_focus
+  - field.field.node.agent_location.field_email_address
+  - field.field.node.agent_location.field_geofield
+  - field.field.node.agent_location.field_has_claims_adjuster
+  - field.field.node.agent_location.field_image
+  - field.field.node.agent_location.field_phone_number
+  - field.field.node.agent_location.field_region
+  - field.field.node.agent_location.field_tags
+  - field.storage.node.field_address
+  - field.storage.node.field_areas_of_focus
+  - field.storage.node.field_email_address
+  - field.storage.node.field_geofield
+  - field.storage.node.field_has_claims_adjuster
+  - field.storage.node.field_phone_number
+  - field.storage.node.field_region
+  - node.type.agent_location
+  - taxonomy.vocabulary.areas_of_focus
+  - views.view.location_finder

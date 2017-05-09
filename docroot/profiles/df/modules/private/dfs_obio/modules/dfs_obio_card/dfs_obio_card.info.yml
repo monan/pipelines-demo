@@ -1,0 +1,13 @@
+name: 'DFS Obio Card'
+type: module
+description: 'Card view mode for our many entities.'
+core: 8.x
+package: Demo Framework Scenarios - Submodules
+scenarios_module: dfs_obio
+dependencies:
+  - dfs_obio_articles
+  - dfs_obio_blocks
+  - dfs_obio_products
+  - df_tools_blocks
+  - df_tools_gallery
+  - df_tools_panelizer

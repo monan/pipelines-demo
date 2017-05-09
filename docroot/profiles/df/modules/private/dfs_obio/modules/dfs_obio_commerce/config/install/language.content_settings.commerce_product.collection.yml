@@ -1,0 +1,16 @@
+uuid: 853fd715-7091-40fb-a298-d8a44b2a0cad
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.collection
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: commerce_product.collection
+target_entity_type_id: commerce_product
+target_bundle: collection
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,63 @@
+body.path-scenarios  {
+ font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+ font-weight: normal;
+ background: #fff;
+}
+
+.path-scenarios .inner-wrap nav, .path-scenarios footer, .bottom-bar {
+	display: none;
+}
+
+.path-scenarios .scenarios-wrapper {
+	max-width:1200px;
+	margin: 0 auto;
+}
+
+.path-scenarios .button a {
+	color: #fff;
+}
+
+.path-scenarios .scenario_screenshot {
+	text-align: center;
+}
+
+.path-scenarios .scenario_screenshot img {
+	text-align: center;
+	max-width:100%;
+}
+
+.path-scenarios .scenario {
+	display:inline-block;
+	border: 3px solid #ccc;
+	border-radius: 10px;
+	max-width: 350px;
+	padding: 20px;
+	margin:10px;
+	vertical-align: top;
+}
+
+.path-scenarios .scenarios-page-title{
+	border-bottom: 2px solid #ccc;
+	margin-bottom: 40px;
+	margin-top: 40px;
+	width: 100%;
+}
+
+.path-scenarios .scenario_link.button {
+	background: #2199e8;
+    color: #ffffff;
+    transition: background-color 0.25s ease-out, color 0.25s ease-out;
+}
+
+.path-scenarios .scenario_link.button:hover {
+	background: #0c4d78;
+}
+
+.path-scenarios .scenario_link.button.alert {
+	background: #ec5840;
+    color: #fff;
+}
+
+.path-scenarios .scenario_link.button.alert:hover {
+	background: #da3116;
+}

@@ -1,0 +1,7 @@
+uuid: 78f39b98-c4a0-423c-8e5e-ed7ff00f23d9
+langcode: en
+status: true
+dependencies: {  }
+id: ambiance_package
+label: 'Ambiance package'
+elementType: radios

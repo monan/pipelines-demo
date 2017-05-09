@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Contains installation and update routines for the DSF Obio Message module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function dfs_obio_message_install() {
+  // Rules cache is not normally cleared when new rules are added.
+  \Drupal::service('rules.cache')->invalidateAll();
+}

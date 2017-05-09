@@ -1,0 +1,3 @@
+required:
+  - page_manager.page.dfs_fin_home
+  - page_manager.page_variant.homepage_variant

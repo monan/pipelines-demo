@@ -1,0 +1,15 @@
+dependencies:
+  config:
+    - entity_browser.browser.image_browser
+    - entity_gallery.type.image
+    - field.field.entity_gallery.image.entity_gallery_file
+    - field.field.entity_gallery.image.field_tags
+content:
+  field_tags:
+    weight: 26
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete

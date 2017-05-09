@@ -1,0 +1,35 @@
+uuid: 7dfac91b-f988-46c2-bba5-fd33a85c5f70
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.file.card
+    - field.field.file.image.field_image_alt_text
+    - field.field.file.image.field_image_title_text
+    - file_entity.type.image
+    - image.style.card_small
+  module:
+    - file_entity
+id: file.image.card
+targetEntityType: file
+bundle: image
+mode: card
+content:
+  uri:
+    type: file_image
+    label: hidden
+    weight: -5
+    settings:
+      image_style: card_small
+      title: field_image_title_text
+      alt: field_image_alt_text
+      image_link: ''
+    third_party_settings: {  }
+hidden:
+  field_image_alt_text: true
+  field_image_title_text: true
+  filemime: true
+  filename: true
+  filesize: true
+  langcode: true
+  uid: true

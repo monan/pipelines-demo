@@ -1,0 +1,11 @@
+dependencies:
+  module:
+    - crop
+effects:
+  frfa2c01-c68c-4802-b689-a3d40b74f621:
+    uuid: frfa2c01-c68c-4802-b689-a3d40b74f621
+    id: crop_crop
+    weight: -11
+    data:
+      crop_type: square
+

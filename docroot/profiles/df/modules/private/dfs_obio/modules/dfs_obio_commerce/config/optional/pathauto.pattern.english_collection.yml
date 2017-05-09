@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - ctools
+    - language
+id: english_collection
+label: 'English/French Collection'
+type: 'canonical_entities:commerce_product'
+pattern: '/collection/[commerce_product:title]'
+selection_criteria:
+  5c33dadd-4ebf-42f0-a72f-56196247c305:
+    id: 'entity_bundle:commerce_product'
+    bundles:
+      collection: collection
+    negate: false
+    context_mapping:
+      commerce_product: commerce_product
+    uuid: 5c33dadd-4ebf-42f0-a72f-56196247c305
+  f98ac8d5-c381-477f-a859-5cba642abc2e:
+    id: language
+    langcodes:
+      en: en
+    negate: false
+    context_mapping:
+      language: 'commerce_product:langcode:language'
+    uuid: f98ac8d5-c381-477f-a859-5cba642abc2e
+selection_logic: and
+weight: -10
+relationships:
+  'commerce_product:langcode:language':
+    label: Language

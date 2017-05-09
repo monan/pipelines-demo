@@ -1,0 +1,7 @@
+required:
+  - field.field.user.user.field_user_agent_location
+  - field.storage.user.field_user_agent_location
+  - page_manager.page_variant.agent_user
+  - page_manager.page_variant.member_user
+  - views.view.agent_content
+  - views.view.agent_portal

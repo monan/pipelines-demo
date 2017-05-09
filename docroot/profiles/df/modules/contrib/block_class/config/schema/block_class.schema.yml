@@ -1,0 +1,15 @@
+block.block.*.third_party.block_class:
+  type: mapping
+  label: Block class third party settings
+  mapping:
+    classes:
+      type: string
+      label: Additional classes for the block
+
+page_manager.block_plugin.*.block_class:
+  type: mapping
+  label: Block class page manager settings
+  mapping:
+    classes:
+      type: string
+      label: Additional classes for the block

@@ -1,0 +1,16 @@
+config_rewrite: replace
+uuid: 5896937b-bb22-4750-9e00-c427fb295513
+langcode: en
+status: true
+dependencies: {  }
+name: hero_mobile
+label: 'Hero small (640x1028)'
+effects:
+  650ac8cd-dfa8-484f-a827-39b79954683d:
+    uuid: 650ac8cd-dfa8-484f-a827-39b79954683d
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 640
+      height: 1028
+

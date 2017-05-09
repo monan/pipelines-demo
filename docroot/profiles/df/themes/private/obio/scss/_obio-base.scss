@@ -1,0 +1,87 @@
+/**
+ * @file
+ * This file is a custom file that loads all files. Each non-base layer
+ * can be disabled.
+ *
+ * Color module cannot handle external imports during CSS processing, so
+ * we have to so them inside the obio-main.scss.
+ *
+ * Theme styles are categorized using SMACSS standards. They utilize
+ * categorization of styles into various categories. Those categories are the
+ * following:
+ *
+ * - Base: CSS reset/normalize plus HTML element styling.
+ * - Layout: Macro arrangement of a web page, including any grid systems.
+ * - Modules: Dictate minor layout modules or reusable elements.
+ * - States: Describe the appearance of a module in various states.
+ * - Theme: Specific customizations for your subtheme.
+ * For more information about this new Drupal css file standard, please review
+ * the following:
+ * - https://drupal.org/node/1887922
+ * - http://smacss.com/
+ */
+
+//This is your _settings.scss file where you can override foundation variables.
+@import 'settings';
+
+// Core
+// The following imports bootstrap the theme.
+@import 'foundation';
+@import 'motion-ui';
+
+// Set flex to true to enable the new Foundation 6 flex grid.
+$flex: true;
+@include foundation-everything($flex);
+@include motion-ui-transitions;
+@include motion-ui-animations;
+
+// Components
+
+// Import our mixins early so they can be used by other partials.
+@import "base/mixins";
+
+// Common file is where you place common utility classes to extend or
+// parametrics.
+@import "base/common";
+
+// Fonts!
+
+// Drupal specific styles (to fix Drupalisms).
+@import "base/drupal";
+@import "base/elements";
+
+// Resets: removes buggy logic (mostly imported from dfs_base).
+@import "base/resets";
+
+// Layout
+// Each section of the document has it's own partial separated out to improve
+// developer experience. Additionally, grids can be declared in layouts as well.
+@import "layout/header";
+@import "layout/main";
+@import "layout/aside";
+@import "layout/footer";
+@import "layout/over-each";
+@import "layout/misc";
+
+// Modules
+@import "modules/block";
+@import "modules/block--hero";
+@import "modules/mod--hero";
+@import "modules/mod--card";
+@import "modules/file--card";
+@import "modules/term";
+@import "modules/views";
+@import "modules/search-hero";
+@import "modules/commerce-product";
+@import "modules/form--add-to-cart";
+@import "modules/slideshow";
+// @import "modules/button";
+
+// States
+// @import "states/collapse";
+
+// Themes
+@import "theme/atomic";
+
+// Older IE support
+// @import "vendor/ie";

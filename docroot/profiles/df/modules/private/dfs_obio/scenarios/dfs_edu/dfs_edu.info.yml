@@ -1,0 +1,10 @@
+name: DFS EDU
+type: module
+description: Higher Education scenario built on OBIO.
+core: 8.x
+package: Demo Framework Scenarios
+dependencies:
+  - dfs_obio
+scenarios_theme: obio
+scenarios_admin_theme: adminimal_theme
+scenarios_module: dfs_edu

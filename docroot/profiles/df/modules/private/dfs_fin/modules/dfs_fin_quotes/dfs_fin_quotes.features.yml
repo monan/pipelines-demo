@@ -1,0 +1,9 @@
+required:
+  - language.content_settings.node.quote
+  - node.type.quote
+  - core.entity_form_display.node.quote.default
+  - core.entity_view_display.node.quote.default
+  - core.entity_view_display.node.quote.teaser
+  - field.field.node.quote.body
+  - field.field.node.quote.field_areas_of_focus
+  - field.field.node.quote.field_tags

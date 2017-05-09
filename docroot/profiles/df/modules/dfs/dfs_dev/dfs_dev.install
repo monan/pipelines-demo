@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Set up the DEV Scenario.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function dfs_dev_uninstall() {
+  // Set front page to "welcome".
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/welcome')->save();
+}
+

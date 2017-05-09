@@ -1,0 +1,23 @@
+uuid: f6a94705-59df-4afc-b92a-82f1a0214035
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_class
+  theme:
+    - tec
+third_party_settings:
+  block_class:
+    classes: ''
+id: pagetitle
+theme: tec
+region: content
+weight: 0
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility: {  }

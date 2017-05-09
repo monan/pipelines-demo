@@ -1,0 +1,80 @@
+//
+// @file
+// Custom styles for commerce product (SMACSS).
+//
+
+$elem-background: $white;
+$elem-color: $black;
+$elem-padding: rem-calc(20px);
+
+.commerce-product {
+  margin-top: rem-calc(55px);
+  margin-bottom: rem-calc(55px);
+
+  .product-variation-info {
+    position: relative;
+    margin-top: rem-calc(28px);
+    margin-bottom: rem-calc(28px);
+    padding: rem-calc($elem-padding) 0;
+    border: 2px solid $elem-color;
+    background: $elem-background;
+    font-size: $label-font-size;
+    overflow: hidden;
+
+    .field-label {
+      display: none;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0.3em;
+      left: 0;
+      border-bottom: 1px dashed $elem-color;
+      margin: rem-calc($elem-padding);
+    }
+
+    .l-table__item {
+      padding: 0 rem-calc($elem-padding);
+    }
+
+    .product-variation-title,
+    .product-variation-price {
+      position: relative;
+      display: inline-block;
+      vertical-align: bottom;
+
+      > div {
+        display: inline-block;
+      }
+    }
+
+    .field-item-title,
+    .field-item {
+      display: inline;
+      background: $elem-background;
+      box-shadow: 0.5em 0 0 $elem-background, -0.5em 0 0 $elem-background;
+    }
+
+    .product-variation-price {
+      .field {
+        display: inline-block;
+      }
+
+      .field-name-price {
+        margin-left: rem-calc(10px);
+        font-size: (1rem / $label-font-size) * 1rem;
+        line-height: 1rem;
+        font-weight: bold;
+
+      }
+    }
+  }
+
+  @include breakpoint(medium down) {
+    .dfs-obio-product-submit {
+      width: 100%;
+    }
+  }
+}

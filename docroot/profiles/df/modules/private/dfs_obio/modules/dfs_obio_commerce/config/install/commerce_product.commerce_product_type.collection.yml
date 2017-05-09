@@ -1,0 +1,9 @@
+uuid: ae0e6ca5-fb92-436f-a094-8a2e76fd5c30
+langcode: en
+status: true
+dependencies: {  }
+id: collection
+label: Collection
+description: ''
+variationType: office
+injectVariationFields: true

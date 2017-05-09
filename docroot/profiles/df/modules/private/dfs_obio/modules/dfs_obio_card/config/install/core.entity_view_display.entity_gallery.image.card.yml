@@ -1,0 +1,28 @@
+uuid: d11750be-902c-4157-866f-56bc85d2d979
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.entity_gallery.card
+    - entity_gallery.type.image
+    - field.field.entity_gallery.image.entity_gallery_file
+    - field.field.entity_gallery.image.field_tags
+  module:
+    - user
+id: entity_gallery.image.card
+targetEntityType: entity_gallery
+bundle: image
+mode: card
+content:
+  entity_gallery_file:
+    label: hidden
+    type: entity_reference_entity_view
+    settings:
+      view_mode: card
+      link: false
+    weight: 0
+    third_party_settings: {  }
+hidden:
+  field_tags: true
+  langcode: true
+  links: true

@@ -1,0 +1,23 @@
+uuid: 3678db1e-911f-4b8c-9e38-f0bb3cc56674
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.content
+id: search_api_views_search
+label: search_api_views_search
+index_id: content
+suggester_id: server
+type: views
+options:
+  suggester_configuration:
+    fields:
+      rendered: 0
+      label: 0
+  min_length: '0'
+  results: 1
+  delay: ''
+  custom:
+    display: default
+  submit_button_selector: ':submit'
+  autosubmit: 1

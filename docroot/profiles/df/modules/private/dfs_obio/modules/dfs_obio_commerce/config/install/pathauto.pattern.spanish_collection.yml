@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+    - ctools
+    - language
+id: spanish_collection
+label: 'Spanish Collection'
+type: 'canonical_entities:commerce_product'
+pattern: '/colección/[commerce_product:title]'
+selection_criteria:
+  5b950bfb-cf7c-409d-9ad1-a716bc3aa722:
+    id: 'entity_bundle:commerce_product'
+    bundles:
+      collection: collection
+    negate: false
+    context_mapping:
+      commerce_product: commerce_product
+    uuid: 5b950bfb-cf7c-409d-9ad1-a716bc3aa722
+  cfd12eef-3901-45d2-993c-7535b10c05c9:
+    id: language
+    langcodes:
+      es: es
+    negate: false
+    context_mapping:
+      language: 'commerce_product:langcode:language'
+    uuid: cfd12eef-3901-45d2-993c-7535b10c05c9
+selection_logic: and
+weight: -10
+relationships:
+  'commerce_product:langcode:language':
+    label: Language

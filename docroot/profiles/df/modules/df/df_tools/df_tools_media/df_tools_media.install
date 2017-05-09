@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Contains installation and update routines for DF Tools Media.
+ */
+
+use Drupal\views\Entity\View;
+
+/**
+ * Implements hook_install().
+ */
+function df_tools_media_install() {
+  // Add a taxonomy filter on both Lightning Media view displays.
+  /** @var \Drupal\views\ViewEntityInterface $view */
+  $view = View::load('media');
+  $display1 = &$view->getDisplay('entity_browser_1');
+  $display2 = &$view->getDisplay('entity_browser_2');
+  $display1['display_options']['filters']['field_tags_target_id'] = $display2['display_options']['filters']['field_tags_target_id'] = [
+    'id' => 'field_tags_target_id',
+    'table' => 'media__field_tags',
+    'field' => 'field_tags_target_id',
+    'relationship' => 'none',
+    'group_type' => 'group',
+    'admin_label' => '',
+    'operator' => 'or',
+    'value' => [],
+    'group' => 1,
+    'exposed' => true,
+    'expose' => [
+      'operator_id' => 'field_tags_target_id_op',
+      'label' => 'Tags',
+      'description' => '',
+      'use_operator' => false,
+      'operator' => 'field_tags_target_id_op',
+      'identifier' => 'field_tags_target_id',
+      'required' => false,
+      'remember' => false,
+      'multiple' => false,
+      'remember_roles' => [
+        'authenticated' => 'authenticated',
+        'anonymous' => '0',
+        'administrator' => '0',
+        'layout_manager' => '0',
+        'creator' => '0',
+        'reviewer' => '0',
+        'media_creator' => '0',
+        'media_manager' => '0',
+      ],
+      'reduce' => false,
+    ],
+    'is_grouped' => false,
+    'group_info' => [
+      'label' => '',
+      'description' => '',
+      'identifier' => '',
+      'optional' => true,
+      'widget' => 'select',
+      'multiple' => false,
+      'remember' => false,
+      'default_group' => 'All',
+      'default_group_multiple' => [],
+      'group_items' => [],
+    ],
+    'reduce_duplicates' => false,
+    'type' => 'textfield',
+    'limit' => true,
+    'vid' => 'media_tags',
+    'hierarchy' => false,
+    'error_message' => true,
+    'plugin_id' => 'taxonomy_index_tid',
+  ];
+  $view->save();
+}

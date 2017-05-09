@@ -1,0 +1,32 @@
+name: DFS FIN
+type: module
+description: Demo Framework Scenario for Financial Services.
+core: 8.x
+package: Demo Framework Scenarios
+dependencies:
+  - config_rewrite
+  - df_tools_blocks
+  - df_tools_editor
+  - df_tools_gallery
+  - df_tools_map
+  - df_tools_migration
+  - df_tools_moderation
+  - df_tools_panelizer
+  - df_tools_slideshow
+  - df_tools_services
+  - df_tools_user
+  - dfs_fin_agent_portal
+  - dfs_fin_contact
+  - dfs_fin_location
+  - dfs_fin_menu
+  - dfs_fin_products
+  - dfs_fin_qa
+  - dfs_fin_quotes
+  - dfs_fin_testimonials
+  - import
+  - moderation_sidebar
+  - search
+  - search_autocomplete
+scenarios_theme: fin
+scenarios_admin_theme: adminimal_theme
+scenarios_module: dfs_fin

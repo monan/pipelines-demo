@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_geofield
+    - node.type.agent_location
+  module:
+    - geofield
+    - dfs_fin_location
+  enforced:
+    module:
+      - dfs_fin_location
+id: node.agent_location.field_geofield
+field_name: field_geofield
+entity_type: node
+bundle: agent_location
+label: Geofield
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: geofield

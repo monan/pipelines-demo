@@ -1,0 +1,16 @@
+name: 'DFS Obio Products'
+type: module
+description: 'Product content type and associated views.'
+core: 8.x
+package: Demo Framework Scenarios - Submodules
+scenarios_module: dfs_obio
+dependencies:
+  - df_tools_tabs
+  - df_tools_media
+  - pathauto
+  - node
+  - comment
+  - better_formats
+  - text
+  - panelizer
+  - user

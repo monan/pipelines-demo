@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * Contains df_tools_moderation.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function df_tools_moderation_form_workbench_moderation_entity_moderation_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $form['#submit'][] = 'df_tools_moderation_workbench_moderation_entity_moderation_form_submit';
+}
+
+/**
+ * Form submission callback for workbench_moderation_entity_moderation_form.
+ */
+function df_tools_moderation_workbench_moderation_entity_moderation_form_submit($form, FormStateInterface $form_state) {
+  /** @var ContentEntityInterface $entity */
+  $entity = $form_state->get('entity');
+
+  $new_state = $form_state->getValue('new_state');
+
+  // When creating a new draft, redirect the user to the latest version of the
+  // content.
+  if ($new_state == 'draft') {
+    $form_state->setRedirectUrl($entity->toUrl('latest-version'));
+  }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter();
+ */
+function df_tools_moderation_menu_local_tasks_alter(&$data, $route_name) {
+  // Runs when cache tag config:block.block.[ActiveTheme]_local_actions is invalidated.
+  if (isset($data['tabs'][0]['moderation_state.entities:node.latest_version_tab'])) {
+    $url = $data['tabs'][0]['moderation_state.entities:node.latest_version_tab']['#link']['url'];
+    $param = $url->getRouteParameters();
+    if (isset($param['node'])) {
+      $node = Node::load($param['node']);
+      $moderation_info = \Drupal::service('workbench_moderation.moderation_information');
+      $latest_node = $moderation_info->getLatestRevision('node', $node->id());
+      // Modify the tabs when the canonical route is the latest revision.
+      if ($latest_node->getRevisionId() == $node->getRevisionId()) {
+        // Highlight the 'View' tab at /node/%/latest.
+        if ($data['tabs'][0]['moderation_state.entities:node.latest_version_tab']['#active']) {
+          $data['tabs'][0]['entity.node.canonical']['#active'] = true;
+        }
+        // Remove the latest version tab.
+        unset($data['tabs'][0]['moderation_state.entities:node.latest_version_tab']);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function df_tools_moderation_tokens($type, $tokens, array $data, array $options, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata) {
+  $replacements = [];
+
+  if ($type == 'node' && !empty($data['node'])) {
+    $url_options = ['absolute' => TRUE];
+    if (isset($options['langcode'])) {
+      $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);
+      $langcode = $options['langcode'];
+    }
+    else {
+      $langcode = NULL;
+    }
+
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $data['node'];
+    /** @var \Drupal\workbench_moderation\ModerationInformation $moderation_information */
+    $moderation_information = \Drupal::service('workbench_moderation.moderation_information');
+    /** @var \Drupal\node\NodeInterface $latest */
+    $latest = $moderation_information->getLatestRevision('node', $node->id());
+    if ($langcode) {
+      $latest = $latest->getTranslation($langcode);
+    }
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'latest_author':
+          $replacements[$original] = $latest->getRevisionUser()->label();
+          break;
+        case 'latest_url':
+          if ($node->getRevisionId() !== $latest->getRevisionId()) {
+            $replacements[$original] = Url::fromRoute('entity.node.latest_version', [
+              'node' => $node->id(),
+            ], $url_options)->toString();
+          }
+          else {
+            $replacements[$original] = $latest->toUrl('canonical', $url_options)->toString();
+          }
+          break;
+      }
+    }
+
+    $token_service = \Drupal::token();
+    if ($author_tokens = $token_service->findWithPrefix($tokens, 'latest_author')) {
+      $replacements += $token_service->generate('user', $author_tokens, ['user' => $latest->getRevisionUser()], $options, $bubbleable_metadata);
+    }
+  }
+
+  return $replacements;
+}

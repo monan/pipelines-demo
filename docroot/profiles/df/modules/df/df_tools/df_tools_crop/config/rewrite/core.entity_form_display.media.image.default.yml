@@ -1,0 +1,19 @@
+dependencies:
+  module:
+    - image_widget_crop
+    - workbench_moderation
+content:
+  image:
+    type: image_widget_crop
+    weight: 0
+    settings:
+      show_default_crop: true
+      warn_multiple_usages: true
+      preview_image_style: thumbnail
+      crop_preview_image_style: crop_thumbnail
+      progress_indicator: throbber
+      crop_list:
+        - square
+        - hero
+      show_crop_area: false
+    third_party_settings: {  }

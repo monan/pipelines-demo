@@ -1,0 +1,325 @@
+<?php
+
+/**
+ * @file
+ * Contains df_tools_translation.module.
+ */
+
+use Drupal\Core\Entity\RevisionLogInterface;
+use Drupal\migrate_source_csv\CSVFileObject;
+use Drupal\migrate\Plugin\Migration;
+use Drupal\migrate_tools\DrushLogMigrateMessage;
+use Drupal\migrate\MigrateMessage;
+use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Row;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
+
+/**
+ * Implements hook_scenarios_migration_finished().
+ *
+ * @todo Can we refactor this to use derived migration plugins?
+ */
+function df_tools_translation_scenarios_migration_finished(Migration $migration) {
+  // Initialize variables required to parse migration.
+  /** @var Drupal\migrate_source_csv\Plugin\migrate\source\CSV $source */
+  $source = $migration->getSourcePlugin();
+  /** @var Drupal\migrate_source_csv\CSVFileObject $iterator */
+  $iterator = $source->initializeIterator();
+  $filename = $iterator->getPath() . '/' . $iterator->getFilename();
+
+  /** @var \Drupal\migrate\Plugin\migrate\destination\EntityContentBase $destination_plugin */
+  $destination_plugin = $migration->getDestinationPlugin();
+  $entity_type = explode(':', $destination_plugin->getPluginId())[1];
+  $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
+
+  // Determine the ID required to lookup entities in this migration.
+  $id_map = [];
+  $ids = array_keys($source->getIds());
+  $processes = $migration->getProcess();
+  // Prefer UUIDs to other fields.
+  if (in_array('UUID', $ids, TRUE)) {
+    $id_map = ['uuid', 'UUID'];
+  }
+  else {
+    foreach ($processes as $field => $process) {
+      if (isset($process[0]['source']) && $process[0]['source'] == $ids[0]) {
+        $id_map = [$field, $ids[0]];
+        break;
+      }
+    }
+  }
+
+  // Get a list of all currently installed languages.
+  $languageManager = \Drupal::languageManager();
+  // We only care about langcodes.
+  $langcodes = array_keys($languageManager->getLanguages());
+
+  // Create a migrate executable, which we use later to set row values.
+  if (function_exists('drush_log')) {
+    $log = new DrushLogMigrateMessage();
+  } else {
+    $log = new MigrateMessage();
+  }
+  $executable = new MigrateExecutable($migration, $log);
+
+  // Process translations for each langcode.
+  foreach ($langcodes as $langcode) {
+    $new_filename = str_replace('.csv', ".$langcode.csv", $filename);
+    if (file_exists($new_filename)) {
+      $file = df_tools_translation_initialize_csv($new_filename);
+      $count = $file->count();
+      $file->rewind();
+      $iterator->rewind();
+
+      // Update translations for each Entity.
+      for ($i = 0; $i < $count; ++$i) {
+        // Get the current row.
+        $source_row = $iterator->current();
+        $row = new Row($file->current(), $source->getIds());
+
+        // Search for the Entity based on its identifier.
+        $field = $id_map[0];
+        // We use the source file here as a UUID is not always used, and field
+        // values (title) may be translated into different languages.
+        $value = $source_row[$id_map[1]];
+        $ids = \Drupal::entityQuery($entity_type)
+          ->condition($field, $value)
+          ->execute();
+        // If a migration failed the Entity won't exist, check for that.
+        if (empty($ids)) {
+          continue;
+        }
+
+        // Load the Entity, so we can grab field values and add a translation.
+        $id = reset($ids);
+        /** @var Drupal\Core\Entity\ContentEntityBase $entity */
+        $entity = $storage->load($id);
+        if (!$entity->hasTranslation($langcode)) {
+          $entity_values = $entity->toArray();
+          $entity_values['path'] = [];
+          $translation = $entity->addTranslation($langcode, $entity_values);
+        }
+        else {
+          $translation = $entity->getTranslation($langcode);
+        }
+
+        // Properly set the content translation metadata, if applicable.
+        if ($translation->hasField('content_translation_source')) {
+          /** @var \Drupal\content_translation\ContentTranslationManager $manager */
+          $manager = \Drupal::service('content_translation.manager');
+          $manager->getTranslationMetadata($translation)
+            ->setSource($entity->language()->getId());
+        }
+
+        // Collect a list of process plugins that either have no source, or
+        // have a source that our translated CSV also has.
+        $process_plugins = [];
+        foreach ($migration->getProcess() as $field_name => $process) {
+          $untranslatable = ['uuid', 'type', 'path'];
+          if (!in_array($field_name, $untranslatable)) {
+            if (!isset($process[0]['source']) || $row->hasSourceProperty($process[0]['source'])) {
+              $process_plugins[$field_name] = $process;
+            }
+          }
+        }
+        // Process the row, then use its destination values as field values
+        // for our translation.
+        $executable->processRow($row, $process_plugins);
+        foreach ($row->getDestination() as $field_name => $values) {
+          $field = $translation->$field_name;
+          if ($field instanceof TypedDataInterface) {
+            $field->setValue($values);
+          }
+        }
+        // Save the translation.
+        if ($translation instanceof RevisionLogInterface) {
+          $translation->setRevisionLogMessage(NULL);
+        }
+        $translation->save();
+
+        // Move to the next row.
+        $file->next();
+        $iterator->next();
+      }
+    }
+  }
+}
+
+/**
+ * Performs minimum steps necessary to load a CSV from a file.
+ *
+ * @param string $filename The filename of a CSV
+ *
+ * @return \Drupal\migrate_source_csv\CSVFileObject The prepared CSV object
+ */
+function df_tools_translation_initialize_csv($filename) {
+  // Grab the processed CSV file using existing CSV methods.
+  $file = new CSVFileObject($filename);
+  $file->setHeaderRowCount(1);
+
+  // Map the column names (first row) to values.
+  $row = $file->current();
+  $column_names = [];
+  foreach ($row as $header) {
+    $header = trim($header);
+    $column_names[] = [$header => $header];
+  }
+  $file->setColumnNames($column_names);
+
+  return $file;
+}
+
+/**
+ * Enables translation for the given entity bundles and all their fields.
+ *
+ * @param array $entity_info An array mapping entity types to arrays of bundles.
+ */
+function df_tools_translation_enable_translation($entity_info) {
+  // Enable translation for all of our entities/bundles.
+  $type_manager = \Drupal::entityTypeManager();
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+  $field_manager = \Drupal::service('entity_field.manager');
+  /** @var \Drupal\content_translation\ContentTranslationManagerInterface $translation_manager */
+  $translation_manager = \Drupal::service('content_translation.manager');
+  $supported_types = $translation_manager->getSupportedEntityTypes();
+  foreach ($entity_info as $entity_type_id => $bundles) {
+    foreach ($bundles as $bundle) {
+      // Store whether a bundle has translation enabled or not.
+      if (isset($supported_types[$entity_type_id])) {
+        $translation_manager->setEnabled($entity_type_id, $bundle, TRUE);
+      }
+      // Make every field translatable as well.
+      $entity_type = $type_manager->getDefinition($entity_type_id);
+      if ($entity_type && $entity_type->isSubclassOf(FieldableEntityInterface::class)) {
+        $fields = $field_manager->getFieldDefinitions($entity_type_id, $bundle);
+        foreach ($fields as $field) {
+          $field_config = $field->getConfig($bundle);
+          if ($field_config->isTranslatable() && strpos($field->getName(), 'content_translation_') !== 0) {
+            $field_config->setTranslatable(TRUE)->save();
+          }
+        }
+      }
+    }
+  }
+  // Ensure entity and menu router information are correctly rebuilt.
+  $type_manager->clearCachedDefinitions();
+  \Drupal::service('router.builder')->setRebuildNeeded();
+}
+
+/**
+ * Updates the current site's translations via a batch process.
+ */
+function df_tools_translation_update_config_translation() {
+  // Pull in translations for the all available languages/projects.
+  \Drupal::moduleHandler()->loadInclude('locale', 'fetch.inc');
+  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+  \Drupal::moduleHandler()->loadInclude('locale', 'compare.inc');
+
+  // Get a list of all currently installed languages as langcodes.
+  $languageManager = \Drupal::languageManager();
+  $langcodes = array_keys($languageManager->getLanguages());
+
+  // Set a batch to download and import translations.
+  locale_translation_flush_projects();
+  locale_translation_check_projects();
+  $options = _locale_translation_default_update_options();
+  $batch = locale_translation_batch_fetch_build([], $langcodes, $options);
+  batch_set($batch);
+  // Set a batch to update configuration as well.
+  if ($batch = locale_config_batch_update_components($options, $langcodes)) {
+    $batch['file'] = drupal_get_path('module', 'df_tools_translation') . '/df_tools_translation.batch.inc';
+    batch_set($batch);
+  }
+}
+
+/**
+ * Imports all relevant translations from a modules /translations directory.
+ *
+ * @param string $type The project type.
+ * @param string $name The name of the project.
+ *
+ * @return bool FALSE if the project does not exist.
+ */
+function df_tools_translation_import_translations($type, $name) {
+  // Attempt to pull module path.
+  $path = drupal_get_path($type, $name);
+  if (!$path) {
+    return FALSE;
+  }
+
+  // Get a list of all currently installed languages as langcodes.
+  $languageManager = \Drupal::languageManager();
+  $langcodes = array_keys($languageManager->getLanguages());
+
+  // Import each file.
+  foreach ($langcodes as $langcode) {
+    $filepath = DRUPAL_ROOT . '/' . $path . '/translations/' . $langcode . '.po';
+    if (file_exists($filepath)) {
+      \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+      \Drupal::moduleHandler()->loadInclude('locale', 'translation.inc');
+      $options = array_merge(_locale_translation_default_update_options(), [
+        'langcode' => $langcode,
+        'overwrite_options' => [
+          'customized' => TRUE,
+          'not_customized' => TRUE
+        ],
+        'customized' => TRUE
+      ]);
+
+      $original_file = (object) [
+        'filename' => $langcode . '.po',
+        'uri' => $filepath
+      ];
+      $file = locale_translate_file_attach_properties($original_file, $options);
+      $batch = locale_translate_batch_build([$file->uri => $file], $options);
+      batch_set($batch);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function df_tools_translation_preprocess_page(&$variables) {
+  // Add a new page variable with the current link.
+  if (!isset($variables['language_current_link']) && isset($variables['language'])) {
+    $variables['language_current_link'] = [
+      '#markup' => t($variables['language']->getName())
+    ];
+  }
+
+  // Add the rest of the language links  as well, with links to switch to the
+  // correct language.
+  if (!isset($variables['language_links'])) {
+    // Get a list of the current languages.
+    $languageManager = \Drupal::languageManager();
+    $languages = $languageManager->getLanguages();
+
+    // Remove the current language.
+    unset($languages[$variables['language']->getId()]);
+
+    // Add each link to the language list.
+    $links = [];
+    foreach ($languages as $language) {
+      $langcode = $language->getId();
+
+      // Get the path to the current node, translated.
+      $current_path = \Drupal::service('path.current')->getPath();
+      $alias = \Drupal::service('path.alias_manager')->getAliasByPath($current_path, $langcode);
+      // We don't need to alias English links.
+      if ($langcode == 'en') {
+        $langcode = '';
+      }
+      $url = \Drupal\Core\Url::fromUri('base:/' . $langcode . $alias);
+
+      $current_name = [
+        '#markup' => t($language->getName())
+      ];
+
+      $links[] = \Drupal::l($current_name, $url);
+    }
+
+    $variables['language_links'] = $links;
+  }
+}

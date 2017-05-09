@@ -1,0 +1,33 @@
+dependencies:
+  config:
+    - field.field.node.product.field_product_product
+third_party_settings:
+  panelizer:
+    displays:
+      default:
+        blocks:
+          0441f2c9-aaa3-4587-9c57-0eaa990c17ab:
+            id: 'entity_field:node:field_product_product'
+            label: 'Build Your Office'
+            provider: ctools_block
+            label_display: visible
+            formatter:
+              label: hidden
+              type: entity_reference_entity_view
+              settings:
+                view_mode: default
+              third_party_settings: {  }
+              weight: 8
+            region: middle
+            weight: 8
+            uuid: 0441f2c9-aaa3-4587-9c57-0eaa990c17ab
+            context_mapping:
+              entity: '@panelizer.entity_context:entity'
+content:
+  field_product_product:
+    weight: 106
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label

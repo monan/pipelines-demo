@@ -1,0 +1,9 @@
+name: DF Tools Media Video
+type: module
+description: Extends the Lightning Media module to provide support for local videos.
+core: 8.x
+package: Demo Framework Tools
+dependencies:
+  - df_tools_media
+  - file_entity
+  - media_entity_video

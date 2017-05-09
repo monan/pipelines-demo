@@ -1,0 +1,28 @@
+<?php
+
+use Drupal\commerce_checkout\Entity\CheckoutFlow;
+
+/**
+ * @file
+ * Install, update and uninstall functions for the dfs_obio_commerce module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function dfs_obio_commerce_install() {
+  // Ensure the translation fields are created in the database.
+  // @todo Remove this when https://www.drupal.org/node/2599228 is fixed.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+
+  // Simplify checkout process.
+  $checkout_flow = CheckoutFlow::load('default');
+  $plugin = $checkout_flow->getPlugin();
+  $configuration = $plugin->getConfiguration();
+  $configuration['panes']['dfs_obio_commerce_completion_message']['step'] = 'complete';
+  $configuration['panes']['contact_information']['step'] = '_disabled';
+  $configuration['panes']['billing_information']['step'] = '_disabled';
+  $configuration['panes']['completion_message']['step'] = '_disabled';
+  $plugin->setConfiguration($configuration);
+  $checkout_flow->save();
+}

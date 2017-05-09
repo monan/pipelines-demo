@@ -1,0 +1,15 @@
+uuid: fae6a0af-3758-4638-8407-3bc89a7e0eae
+langcode: en
+status: true
+dependencies:
+  module:
+    - media_entity_video
+id: local_video
+label: 'Local Video'
+description: 'Locally hosted videos.'
+type: video
+queue_thumbnail_downloads: false
+new_revision: false
+type_configuration:
+  source_field: field_media_video_local_file
+field_map: {  }

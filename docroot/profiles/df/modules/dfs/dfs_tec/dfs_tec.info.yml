@@ -1,0 +1,19 @@
+name: DFS TEC
+type: module
+description: Demo Framework Scenario for Technology Websites.
+core: 8.x
+package: Demo Framework Scenarios
+dependencies:
+  - config_rewrite
+  - df_tools_display
+  - df_tools_blocks
+  - df_tools_migration
+  - df_tools_moderation
+  - df_tools_slideshow
+  - df_tools_services
+  - df_tools_translation
+  - df_tools_user
+  - import
+scenarios_theme: tec
+scenarios_admin_theme: adminimal_theme
+scenarios_module: dfs_tec

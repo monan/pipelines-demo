@@ -1,0 +1,24 @@
+required:
+  - core.entity_form_display.node.insurance_product.default
+  - field.field.node.insurance_product.field_subtitle
+  - core.entity_view_display.node.insurance_product.default
+  - field.storage.node.field_associated_testimonials
+  - core.entity_view_display.node.insurance_product.teaser 
+  - field.storage.node.field_hero_promo_reference
+  - field.field.node.insurance_product.body 
+  - field.storage.node.field_hero_reference
+  - field.field.node.insurance_product.field_associated_testimonials
+  - field.storage.node.field_icon
+  - field.field.node.insurance_product.field_hero_promo_reference
+  - field.storage.node.field_promo_text
+  - field.field.node.insurance_product.field_hero_reference
+  - field.storage.node.field_short_title
+  - field.field.node.insurance_product.field_icon 
+  - field.storage.node.field_subtitle
+  - field.field.node.insurance_product.field_image
+  - node.type.insurance_product
+  - field.field.node.insurance_product.field_promo_text
+  - views.view.products
+  - field.field.node.insurance_product.field_short_title
+  - views.view.products_home_callout 
+  - views.view.product_bundle_callout 

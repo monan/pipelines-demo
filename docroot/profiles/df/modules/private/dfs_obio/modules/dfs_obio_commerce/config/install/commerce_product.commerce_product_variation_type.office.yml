@@ -1,0 +1,8 @@
+uuid: f438d9bd-288c-4c87-931b-952c54433877
+langcode: en
+status: true
+dependencies: {  }
+id: office
+label: Office
+orderItemType: default
+generateTitle: false

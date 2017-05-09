@@ -1,0 +1,14 @@
+uuid: null
+permissions:
+  - 'create location content'
+  - 'delete own location content'
+  - 'edit own location content'
+  - 'view location revisions'
+  - 'create product content'
+  - 'delete own product content'
+  - 'edit own product content'
+  - 'view product revisions'
+  - 'administer panelizer node location content'
+  - 'administer panelizer node location layout'
+  - 'administer panelizer node product content'
+  - 'administer panelizer node product layout'

@@ -1,0 +1,93 @@
+/**
+ * @file lightning_media.css
+ */
+
+input[name="field_tags_target_id"],
+input[name="field_tags_target_id"].form-text {
+  max-width: 250px;
+}
+
+nav.eb-tabs ul {
+	margin-top:15px;
+	margin-bottom:15px;
+}
+
+nav.eb-tabs ul li.active a {
+    background-color: #ffffff!important;
+    border-radius: 0;
+    border-bottom:2px solid #0074bd;
+}
+
+nav.eb-tabs ul li a {
+    border-radius: 0;
+}
+
+.eb-media {
+	position: relative;
+	padding-bottom:50px;
+}
+
+.eb-media .pager {
+	text-align: center;
+	border-bottom:1px solid #d0d0d0;
+	bottom:50px;
+	height:50px;
+	line-height: 50px;
+	z-index: 3;
+	width:100%;
+	margin:0;
+	background-color:#fff;
+}
+
+.entity-browser-media-browser-form {
+	padding-bottom:50px;
+	position: relative;
+}
+
+
+.entity-browser-media-browser-form .views-filter {
+	padding-top:20px;
+}
+
+.view.eb-media .views-exposed-form .form--inline .form-actions {
+	padding-top:20px;
+}
+
+.entity-browser-media-browser-form .view-content {
+	padding-bottom:10px;
+	position: relative;
+}
+
+.entities-list .item-container {
+	border:1px solid #ccc;
+}
+
+#entity-browser-iframe-container {
+	padding-bottom:50px!important;
+}
+
+.view.eb-media .view-content {
+	margin:0!important;
+	padding-top:1em;
+}
+
+.entity-browser-media-browser-form > .form-actions, .entity-browser-image-browser-form > .form-actions, .entity-browser-media-browser-in-modal-form > .form-actions{
+	position: fixed;
+	bottom:0px;
+	background:#fff;
+	width:100%;
+	margin-top:0;
+	margin-bottom:0;
+	padding:10px 0 20px 0;
+	z-index:3;
+
+}
+
+.entity-browser-media-browser-form .button, .entity-browser-image-browser-form .button, .entity-browser-media-browser-in-modal-form .button{
+	border-radius: 0;
+}
+
+.entity-browser-media-browser-form .button:hover, .entity-browser-image-browser-form .button:hover, .entity-browser-media-browser-in-modal-form .button:hover{
+	background-image:none;
+	box-shadow: none;
+}

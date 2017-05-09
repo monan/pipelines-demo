@@ -1,0 +1,192 @@
+<?php
+/**
+ * @file
+ * Contains acquia_contenthub.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function acquia_contenthub_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.acquia_contenthub':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Some info about Acquia Content Hub') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function acquia_contenthub_entity_insert(EntityInterface $entity) {
+  /** @var \Drupal\acquia_contenthub\EntityManager $entity_manager */
+  $entity_manager = \Drupal::service('acquia_contenthub.entity_manager');
+  $entity_manager->entityAction($entity, 'INSERT');
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function acquia_contenthub_entity_update(EntityInterface $entity) {
+  /** @var \Drupal\acquia_contenthub\EntityManager $entity_manager */
+  $entity_manager = \Drupal::service('acquia_contenthub.entity_manager');
+  $entity_manager->entityAction($entity, 'UPDATE');
+
+  /** @var \Drupal\acquia_contenthub\ImportEntityManager $import_entity_manager */
+  $import_entity_manager = \Drupal::service('acquia_contenthub.import_entity_manager');
+  $import_entity_manager->entityUpdate($entity);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function acquia_contenthub_entity_delete(EntityInterface $entity) {
+  /** @var \Drupal\acquia_contenthub\EntityManager $entity_manager */
+  $entity_manager = \Drupal::service('acquia_contenthub.entity_manager');
+  $entity_manager->entityAction($entity, 'DELETE');
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function acquia_contenthub_entity_presave(EntityInterface $entity) {
+  /** @var \Drupal\acquia_contenthub\ImportEntityManager $import_entity_manager */
+  $import_entity_manager = \Drupal::service('acquia_contenthub.import_entity_manager');
+  $import_entity_manager->entityPresave($entity);
+}
+
+/**
+ * Sends entities to Content Hub using Bulk Upload.
+ */
+function acquia_contenthub_send_entities() {
+  /** @var \Drupal\acquia_contenthub\EntityManager $entity_manager */
+  $entity_manager = \Drupal::service('acquia_contenthub.entity_manager');
+
+  /** @var \Drupal\acquia_contenthub\Normalizer\ContentEntityCdfNormalizer $acquia_contenthub_normalizer */
+  $acquia_contenthub_normalizer = \Drupal::service('acquia_contenthub.normalizer.entity.acquia_contenthub_cdf');
+
+  /** @var \Drupal\acquia_contenthub\Controller\ContentHubEntityExportController $acquia_contenthub_export_controller */
+  $acquia_contenthub_export_controller = \Drupal::service('acquia_contenthub.acquia_contenthub_export_entities');
+
+  $entities = $entity_manager->collectExportEntities();
+
+  // Verify that the collected entities are not already included within the
+  // the references of other collected entities.
+  $uuids = array_keys($entities);
+  foreach ($entities as $en) {
+    $entity = $en['entity'];
+    // Get referenced entities.
+    $referenced_entities = $acquia_contenthub_normalizer->getReferencedFields($entity);
+
+    // If entities are included as references then delete them from the
+    // collected entities array.
+    foreach ($referenced_entities as $key => $ref_entity) {
+      if (in_array($ref_entity->uuid(), $uuids)) {
+        unset($entities[$ref_entity->uuid()]);
+      }
+    }
+  }
+
+  // The collected entities are clean now and should all be processed.
+  $exported_entities = [];
+  $bulk_url_array = [];
+  foreach ($entities as $en) {
+    $entity = $en['entity'];
+    $entity_type = $entity->getEntityTypeId();
+    $entity_id = $entity->id();
+    $bulk_url_array[$entity_type][$entity_id] = $entity_id;
+    $exported_entities = array_merge($exported_entities, $acquia_contenthub_export_controller->getEntityCdfByInternalRequest($entity_type, $entity_id));
+  }
+  // Eliminating duplicates.
+  $exported_cdfs = [];
+  foreach ($exported_entities['entities'] as $cdf) {
+    $exported_cdfs[$cdf['uuid']] = $cdf;
+  }
+
+  // Now implode parameters.
+  foreach ($bulk_url_array as $entity_type => $entities) {
+    $bulk_url_array[$entity_type] = implode(',', $entities);
+  }
+  $resource_url = $entity_manager->getBulkResourceUrl($bulk_url_array);
+
+  // @TODO This logic should be reviewed later on. We are just saving the
+  // exported entities and not using this information to optimize the export
+  // yet.
+  // Setting up INITIATED status to all tracked exported entities.
+  foreach ($exported_cdfs as $exported_entity) {
+    // Obtaining the entity ID from the entity.
+    $acquia_contenthub_export_controller->trackExportedEntity($exported_entity);
+  }
+  // @TODO: If we are not able to set export status for entities then we are
+  // not exportig entities. Check these lines for media entities.
+  if (!empty($exported_cdfs)) {
+    $entity_manager->updateRemoteEntities($resource_url);
+  }
+
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function acquia_contenthub_form_node_form_alter(&$form, $form_state) {
+  /* @var Drupal\Core\Entity\FieldableEntityInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+  $node_form_service = \Drupal::service('acquia_contenthub.form.node_form');
+  $node_form = $node_form_service->getForm($node);
+
+  if (!$node_form) {
+    return;
+  }
+
+  // Attach node form.
+  $form['acquia_contenthub'] = $node_form;
+  // Attach submit handler.
+  $submit_handler_name = 'acquia_contenthub_form_node_form_submit';
+  $node_form_service->attachSubmitHandler($form['actions'], $submit_handler_name);
+}
+
+/**
+ * Submit handler for the node form with acquia contenthub options.
+ *
+ * @see acquia_contenthub_form_node_form_alter()
+ */
+function acquia_contenthub_form_node_form_submit($form, FormStateInterface $form_state) {
+  $node_form_service = \Drupal::service('acquia_contenthub.form.node_form');
+  $node_form_service->saveSettings($form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function acquia_contenthub_form_node_type_form_alter(array &$form, FormStateInterface &$form_state) {
+  $node_type = $form_state->getFormObject()->getEntity()->id();
+
+  /** @var \Drupal\acquia_contenthub\EntityManager $entity_manager */
+  $entity_manager = \Drupal::service('acquia_contenthub.entity_manager');
+  /** @var \Drupal\acquia_contenthub\Entity\ContentHubEntityTypeConfig $entity_type_config */
+  $entity_type_config = $entity_manager->getContentHubEntityTypeConfigurationEntity('node');
+
+  // Only enable selection of preview images for entities that have been
+  // previously selected to work with Acquia Content Hub.
+  if (!empty($entity_type_config) && $entity_type_config->isEnableIndex($node_type)) {
+    $form['acquia_contenthub'] = \Drupal::service('acquia_contenthub.form.node_type_preview_image_form')->getForm($node_type);
+    $form['actions']['submit']['#submit'][] = 'acquia_contenthub_form_node_type_form_submit';
+  }
+}
+
+/**
+ * Submit handler for the node type form with acquia contenthub options.
+ *
+ * @see acquia_contenthub_form_node_type_form_alter()
+ */
+function acquia_contenthub_form_node_type_form_submit(array $form, FormStateInterface &$form_state) {
+  $node_type = $form_state->getFormObject()->getEntity()->id();
+  $settings = $form_state->getValue('acquia_contenthub');
+  \Drupal::service('acquia_contenthub.form.node_type_preview_image_form')->saveSettings($node_type, $settings);
+}

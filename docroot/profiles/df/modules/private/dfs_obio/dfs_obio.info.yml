@@ -1,0 +1,34 @@
+name: DFS Obio
+type: module
+description: Demo Framework Scenario for Obio.
+core: 8.x
+package: Demo Framework Scenarios
+dependencies:
+  - config_rewrite
+  - df_tools_tabs
+  - df_tools_blocks
+  - df_tools_color
+  - df_tools_editor
+  - df_tools_gallery
+  - df_tools_message
+  - df_tools_migration
+  - df_tools_moderation
+  - df_tools_panelizer
+  - df_tools_services
+  - df_tools_user
+  - import
+  - moderation_sidebar
+  - responsive_preview
+  - dfs_obio_articles
+  - dfs_obio_blocks
+  - dfs_obio_contact
+  - dfs_obio_commerce
+  - dfs_obio_locations
+  - dfs_obio_message
+  - dfs_obio_products
+  - dfs_obio_card
+  - search
+  - search_autocomplete
+scenarios_theme: obio
+scenarios_admin_theme: adminimal_theme
+scenarios_module: dfs_obio

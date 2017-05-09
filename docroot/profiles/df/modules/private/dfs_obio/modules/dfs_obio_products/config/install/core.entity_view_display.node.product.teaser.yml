@@ -1,0 +1,48 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.product.field_product_description
+    - field.field.node.product.field_product_features
+    - field.field.node.product.field_product_media
+    - field.field.node.product.field_product_reviews
+    - field.field.node.product.field_product_success_stories
+    - field.field.node.product.field_tags
+    - field.field.node.product.panelizer
+    - image.style.product_square
+    - node.type.product
+  module:
+    - media_entity
+    - panelizer
+    - user
+third_party_settings:
+  panelizer:
+    enable: false
+    custom: false
+    allow: false
+    default: default
+id: node.product.teaser
+targetEntityType: node
+bundle: product
+mode: teaser
+content:
+  field_product_media:
+    type: media_thumbnail
+    weight: 0
+    label: hidden
+    settings:
+      image_style: product_square
+      image_link: content
+    third_party_settings: {  }
+hidden:
+  addtoany: true
+  field_product_description: true
+  field_product_features: true
+  field_product_reviews: true
+  field_product_success_stories: true
+  field_tags: true
+  langcode: true
+  links: true
+  panelizer: true
+  workbench_moderation_control: true

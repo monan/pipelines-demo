@@ -1,0 +1,15 @@
+<?php
+/**
+ * @file
+ * Hook implementations for OAuth module.
+ */
+
+/**
+ * Implements hook_user_delete().
+ */
+function oauth_user_delete(Drupal\Core\Entity\EntityInterface $user) {
+  // Delete all consumers related to a user.
+  db_delete('oauth_consumer')
+    ->condition('uid', $user->id())
+    ->execute();
+}

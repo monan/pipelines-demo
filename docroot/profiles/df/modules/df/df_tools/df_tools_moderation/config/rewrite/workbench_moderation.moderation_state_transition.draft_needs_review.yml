@@ -1,0 +1,4 @@
+third_party_settings:
+  workbench_email:
+    workbench_email_templates:
+      draft_ready_for_review: draft_ready_for_review

@@ -1,0 +1,93 @@
+entity_config:
+  node:
+    article:
+      enable_index: true
+      enable_viewmodes: true
+      rendering:
+        teaser: teaser
+        card: card
+      preview_image_field: field_image
+      preview_image_style: large
+    location:
+      enable_index: true
+      enable_viewmodes: true
+      rendering:
+        teaser: teaser
+      preview_image_field: 'field_location_media->thumbnail'
+      preview_image_style: large
+  block_content:
+    hero:
+      enable_index: true
+      enable_viewmodes: true
+      rendering:
+        full: full
+      preview_image_field: field_hero_image
+      preview_image_style: large
+  taxonomy_term:
+    tags:
+      enable_index: true
+      enable_viewmodes: false
+      rendering: []
+      preview_image_field: ''
+      preview_image_style: ''
+    media_tags:
+      enable_index: true
+      enable_viewmodes: false
+      rendering: []
+      preview_image_field: ''
+      preview_image_style: ''
+  media:
+    image:
+      enable_index: true
+      enable_viewmodes: false
+      rendering: []
+      preview_image_field: ''
+      preview_image_style: ''
+default_content:
+  block_content:
+    -
+      info: Inspiring Office
+      type: hero
+    -
+      info: Startups Hero
+      type: hero
+    -
+      info: Recruiter Persona CTA Hero
+      type: hero
+slots:
+   d790daf5-f120-472d-99b9-9b8cd14de2ef:
+    landing_page_title: Home
+    block_plugin_uuid: f23e259b-6ebe-435c-8c67-be4cebb150a1
+    block_plugin_weight: 0
+    block_plugin_full_width: true
+    block_plugin_region: top
+    label: Obio homepage slot
+    description: The default homepage slot for Obio
+    rules:
+      startup-rule:
+        segment: startup
+        label: Startup Founders
+        description: A rule for startup founders
+        priority: 30
+        content:
+          -
+            info: Startups Hero
+            type: hero
+      recruiter:
+        segment: recruiter
+        label: Recruiters
+        description: A rule for startup recruiters
+        priority: 20
+        content:
+          -
+            info: Recruiter Persona CTA
+            type: hero
+      everyone-rule:
+        segment: ''
+        label: Everyone
+        description: A rule for all visitors
+        priority: 10
+        content:
+          -
+            info: Inspiring Office
+            type: hero

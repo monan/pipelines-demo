@@ -1,0 +1,12 @@
+dependencies:
+  config:
+    - field.field.node.product.field_product_product
+content:
+  field_product_product:
+    type: entity_reference_autocomplete
+    weight: 14
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }

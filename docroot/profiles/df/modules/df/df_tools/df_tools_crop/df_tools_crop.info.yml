@@ -1,0 +1,10 @@
+name: DF Tools Core
+type: module
+description: Provides some basic cropping.
+core: 8.x
+package: Demo Framework Tools
+dependencies:
+  - crop
+  - image_widget_crop
+  - df_tools_blocks
+  - df_tools_media

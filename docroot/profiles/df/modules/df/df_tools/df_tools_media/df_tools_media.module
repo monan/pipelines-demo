@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Contains df_tools_media.module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function df_tools_media_migration_plugins_alter(&$definitions) {
+  $id = 'import_media_image';
+  $definitions[$id]['source']['path'] = str_replace('..', dirname(__FILE__), $definitions[$id]['source']['path']);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function df_tools_media_form_entity_browser_media_browser_in_modal_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['#attached']['library'][] = 'lightning_media/browser.styling';
+}

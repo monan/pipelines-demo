@@ -1,0 +1,7 @@
+submit_replicate:
+  js:
+    js/dfs_obio_commerce-sumbit_replicate.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal

@@ -1,0 +1,25 @@
+name: 'DFS Obio Commerce'
+type: module
+description: 'Commerce integration and configuration.'
+core: 8.x
+package: Demo Framework Scenarios - Submodules
+scenarios_module: dfs_obio
+dependencies:
+  - address
+  - block
+  - commerce
+  - commerce_cart
+  - commerce_checkout
+  - commerce_order
+  - commerce_price
+  - commerce_product
+  - commerce_store
+  - ctools
+  - dfs_obio_products
+  - field
+  - inline_entity_form
+  - language
+  - path
+  - pathauto
+  - state_machine
+  - user

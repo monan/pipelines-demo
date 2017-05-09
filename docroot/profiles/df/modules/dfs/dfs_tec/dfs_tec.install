@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Set up the TEC Scenario.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function dfs_tec_install() {
+  // Enable translation for all of our entities/bundles.
+  $entities = [
+    'node' => ['employee', 'service']
+  ];
+  df_tools_translation_enable_translation($entities);
+
+  // Import our custom .po files
+  df_tools_translation_import_translations('module', 'dfs_tec');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function dfs_tec_uninstall() {
+  // Set front page to "welcome".
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', '/welcome')->save();
+}

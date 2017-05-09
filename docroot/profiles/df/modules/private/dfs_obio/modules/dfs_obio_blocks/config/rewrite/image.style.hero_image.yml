@@ -1,0 +1,16 @@
+config_rewrite: replace
+uuid: 77a65b76-c298-419b-9302-2ed72f5e4960
+langcode: en
+status: true
+dependencies: {  }
+name: hero_image
+label: 'Hero large (1920x600)'
+effects:
+  ede4cee6-6427-4215-ba46-7025d00fbb17:
+    uuid: ede4cee6-6427-4215-ba46-7025d00fbb17
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 1920
+      height: 600
+

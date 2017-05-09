@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Set up the Demo Framework.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function df_admin_install() {
+  // Create the rebuild.dat file to trigger a menu router rebuild on first use.
+  $rebuild_path = 'public:///rebuild.dat';
+  if (file_exists($rebuild_path)) {
+    // Short circuit if the .rebuild file already exists.
+    return TRUE;
+  }
+
+  // Write the rebuild file.
+  if (file_exists('public://') && is_writable('public://') && file_put_contents($rebuild_path, 'typhonius')) {
+    return drupal_chmod($rebuild_path, 0644);
+  }
+  else {
+    $variables = array('%directory' => 'public://');
+    \Drupal::logger('df_admin')->error("Couldn't write rebuild.dat file. Please either manually create a rebuild.dat file %directory directory or clear the cache from the website.");
+    return FALSE;
+  }
+
+}

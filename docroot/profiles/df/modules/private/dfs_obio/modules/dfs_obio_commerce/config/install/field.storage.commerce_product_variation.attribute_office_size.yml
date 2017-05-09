@@ -1,0 +1,19 @@
+uuid: a78975a3-b0f1-4df3-8737-0a742fad44a3
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+id: commerce_product_variation.attribute_office_size
+field_name: attribute_office_size
+entity_type: commerce_product_variation
+type: entity_reference
+settings:
+  target_type: commerce_product_attribute_value
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

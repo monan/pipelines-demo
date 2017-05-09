@@ -1,0 +1,22 @@
+h5 {
+    color: $white;
+    font-weight: bold;
+}
+
+h2 {
+    font-weight: 300;
+}
+
+//add specific styles for wysiwyg 
+.field-type-text-with-summary {
+    h2 {
+        line-height: 1.7;
+    }
+}
+
+label {
+    display: inline-block;
+    color: $white;
+    line-height: 1em;
+    vertical-align: bottom;
+}

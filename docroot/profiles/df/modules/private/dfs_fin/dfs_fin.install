@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Set up the FIN Scenario.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function dfs_fin_install() {
+  // Enable translation for all of our entities/bundles.
+  $entities = [
+    'node' => ['article', 'testimonial', 'question', 'insurance_product', 'agent_location']
+  ];
+  df_tools_translation_enable_translation($entities);
+
+  // Import our custom .po files
+  df_tools_translation_import_translations('module', 'dfs_fin');
+
+}
