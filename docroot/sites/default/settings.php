@@ -726,7 +726,7 @@ if (!isset($settings['file_public_path'])
 // settings.php for development on your local workstation, set $db_url
 // (Drupal 5 or 6) or $databases (Drupal 7 or 8) as described in comments above.
 if (file_exists('/var/www/site-php')) {
-  require('/var/www/site-php/obiobuild/obiobuild-settings.inc');
+  require('/var/www/site-php/cddemo13/cddemo13-settings.inc');
 }
 $settings['install_profile'] = 'df';
 $settings['profile_directories'] = array (
